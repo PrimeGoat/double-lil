@@ -1,123 +1,117 @@
-const Node = (value) => {
+const Node = function(data) {
   return {
-    value,
+    value: data,
     next: null,
-    previous: null,
+    prev: null
   }
 }
 
-
-const Lil = () => {
+const Lil = function() {
   return {
-    head: null,
-    tail: null,
-
     addToStart: function(value) {
-      const newNode = Node(value);
+      const element = Node(value);
 
-      if (this.head === null) {
-        this.head = newNode;
-
-        return;
+      if(this.head == null) {
+        this.head = element;
+        this.tail = element;
+      } else {
+        element.next = this.head;
+        element.prev = null;
+        this.head.prev = element;
+        this.head = element;
       }
-
-      newNode.next = this.head;
-      this.head.previous = newNode;
-      this.head = newNode;
-
     },
 
     addToEnd: function(value) {
-      const newNode = Node(value);
+      const element = Node(value);
 
-      if (this.head === null) {
-        this.head = newNode;
-        this.tail = newNode;
+      if(this.tail == null) {
+        this.head = element;
+        this.tail = element;
+      } else {
+        /*
+        let current = this.head;
 
-        return;
+        while(current.next != null) {
+          current = current.next;
+        }
+        */
+
+        let current = this.tail;
+
+        current.next = element;
+        element.prev = current;
+        this.tail = element;
       }
-      
-      let current = this.head;
-
-      while (current.next !== null) {
-        current = current.next
-      }
-
-      current.next = newNode;
     },
 
     removeFromStart: function() {
-      const toBeRemoved = this.head.value;
+      let out = this.head.value;
       this.head = this.head.next;
 
-      return toBeRemoved;
+      return out;
     },
 
     removeFromEnd: function() {
+      /*
       let current = this.head;
 
-      while (current.next.next !== null) {
-        current = current.next
+      while(current.next.next != null) {
+        current = current.next;
       }
+      */
+      let last = this.tail;
+      const out = last.value;
+      last.prev.next = null;
+      this.tail = last.prev;
 
-      const toBeRemoved = current.next.value;
-      current.next = null;
-
-      return toBeRemoved;
+      return out;
     },
 
-    getAt: function(i) {
-      if (this.head === null) {
+    getAt: function(index) {
+      if(this.head == null) {
         return null;
       }
 
-      let count = 0;
-      let current = this.head;
-
-      while (count < i) {
+      let current = this.head
+      for(let i = 0; i < index; i++) {
         current = current.next;
-        count++;
       }
 
       return current.value;
     },
 
-    removeAt: function(i) {
-      if (this.head === null) {
+    removeAt: function(index) {
+      if(this.head == null) {
         return null;
       }
 
-      let count = 0;
-      let current = this.head;
-
-      while (count < i - 1) {
+      let current = this.head
+      for(let i = 0; i < index - 1; i++) {
         current = current.next;
-        count++;
       }
 
-      const toBeRemoved = current.next;
-      const oneAfter = current.next.next;
-      const removedValue = toBeRemoved.value;
-      
-      current.next = oneAfter;
+      let out = current.next;
+      let after = out.next;
 
-      return removedValue;
+      current.next = after;
+      return out.value;
     },
+
+    head: null,
+    value: undefined,
+    tail: null
   }
 }
 
-
-
-
-
-
-if (typeof Node === 'undefined') {
+if (typeof Node == 'undefined') {
   Node = undefined;
 }
 
-if (typeof Lil === 'undefined') {
+if (typeof Lil == 'undefined') {
   Lil = undefined;
 }
+
 
 
 module.exports = {
